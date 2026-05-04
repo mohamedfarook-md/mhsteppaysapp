@@ -1,41 +1,47 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# ==============================
+# ENV FILES (VERY IMPORTANT 🔥)
+# ==============================
+.env
 
-# dependencies
+# ==============================
+# NODE MODULES
+# ==============================
 node_modules/
 
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
+# ==============================
+# LOG FILES
+# ==============================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Native
-.kotlin/
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
+# ==============================
+# OS FILES
+# ==============================
 .DS_Store
-*.pem
+Thumbs.db
 
-# local env files
-.env*.local
+# ==============================
+# BUILD FILES
+# ==============================
+dist/
+build/
 
-# typescript
-*.tsbuildinfo
+# ==============================
+# UPLOADS (KYC images 🔐)
+# ==============================
+backend/uploads/
 
-# generated native folders
-/ios
-/android
+# ==============================
+# EXPO / REACT NATIVE
+# ==============================
+frontend/.expo/
+frontend/android/
+frontend/ios/
+
+# ==============================
+# CACHE
+# ==============================
+.cache/

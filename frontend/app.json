@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "StepPays",
+    "slug": "steppays-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#6C2BD9"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.steppays.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#6C2BD9"
+      },
+      "package": "com.steppays.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+   
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow StepPays to access your photos for KYC upload.",
+          "cameraPermission": "Allow StepPays to use your camera."
+        }
+      ]
+    ]
+  }
+}
