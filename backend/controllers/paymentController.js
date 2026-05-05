@@ -14,7 +14,8 @@ const sendResponse = (res, statusCode, success, message, data = {}) => {
  */
 const initiatePayment = async (req, res) => {
   try {
-    const { amount, merchantId, customerName, customerEmail, customerPhone } = req.body;
+    // const { amount, merchantId, customerName, customerEmail, customerPhone } = req.body;
+    const { amount, merchantId, merchantName, customerName, customerEmail, customerPhone } = req.body;
     const user = req.user;
 
     // ── Validate amount ─────────────────────────────────────────────────────
@@ -56,28 +57,19 @@ const initiatePayment = async (req, res) => {
       firstname,
       email,
     });
-let merchantName = merchantId || 'Payment';
-    if (merchantId) {
+
+    let merchantName = merchantId || 'Payment';
+
+if (merchantId) {
   const merchantData = await Merchant.findOne({ merchantId });
-  if (merchantData) {
+  console.log("MERCHANT FETCH:", merchantData);
+
+  if (merchantData && merchantData.name) {
     merchantName = merchantData.name;
   }
 }
 
     // ── Save pending transaction ────────────────────────────────────────────
-    // await Transaction.create({
-    //   userId: user._id,
-    //   txnId: txnid,
-    //   merchantId: merchantId || '',
-    //   merchant: merchantId || '',
-    //   amount: numAmount,
-    //   status: 'pending',
-    //   type: 'payu',
-    //   customerName: firstname,
-    //   customerEmail: email,
-    //   customerPhone: phone,
-    //   hash, // Stored for audit (excluded from default queries)
-    // });
 
     await Transaction.create({
   userId: user._id,
