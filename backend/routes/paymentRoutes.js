@@ -66,13 +66,11 @@
 
 
 
-
 // routes/paymentRoutes.js
 const express = require('express');
 const router = express.Router();
 
-// ✅ Middleware
-const auth = require('../middleware/auth');
+// ✅ Middleware (ONLY THIS)
 const { protect } = require('../middleware/auth');
 
 // ✅ Controllers
@@ -104,11 +102,9 @@ router.post('/failure', paymentFailure);
 // ⚡ UPI DIRECT ROUTES
 // ─────────────────────────────────────────────
 
-// POST /api/payment/upi-initiate (Protected)
-router.post('/upi-initiate', auth, initiateUPIPayment);
-
-// POST /api/payment/upi-success (Protected)
-router.post('/upi-success', auth, markUPISuccess);
+// 🔥 FIXED (use protect, NOT auth)
+router.post('/upi-initiate', protect, initiateUPIPayment);
+router.post('/upi-success', protect, markUPISuccess);
 
 
 // ─────────────────────────────────────────────
