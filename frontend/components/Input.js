@@ -367,6 +367,7 @@ const Input = ({
   keyboardType = 'default',
   autoCapitalize = 'none',
   error,
+  inputStyle, 
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -388,7 +389,7 @@ const Input = ({
           autoCapitalize={autoCapitalize}
           autoCorrect={false}
           blurOnSubmit={false}
-          style={styles.input}
+          style={[styles.input, inputStyle]}
         />
 
         {secureTextEntry && (

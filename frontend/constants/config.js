@@ -1,5 +1,5 @@
 // constants/config.js
-export const BASE_URL = 'https://apisteppays.in/api';
+export const BASE_URL = 'https://mhsteppaysapp.in/api';
 
 export const COLORS = {
   primary: '#6C2BD9',

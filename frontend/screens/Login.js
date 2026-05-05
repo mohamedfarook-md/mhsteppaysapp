@@ -66,37 +66,77 @@ const Login = ({ navigation }) => {
 
 
 
-  const handleLogin = async () => {
+//   const handleLogin = async () => {
+//   if (!validate()) return;
+
+//   setLoading(true);
+
+//   try {
+//     const data = await loginUser(mobile, password);
+
+//     if (data.token) {
+//       await saveToken(data.token);
+//       if (data.user) await saveUser(data.user);
+
+//       // ✅ KYC CHECK
+//       if (data.user.kycStatus !== "approved") {
+//         navigation.replace("KYCPending");
+//         return;
+//       }
+
+//       // ✅ HOME NAVIGATION
+//       navigation.replace('Home');
+
+//     } else {
+//       Alert.alert('Login Failed', data.message || 'Invalid credentials');
+//     }
+
+//   } catch (error) {
+//     Alert.alert('Error', handleError(error, "Login failed"));
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+const handleLogin = async () => {
   if (!validate()) return;
 
   setLoading(true);
 
   try {
-    const data = await loginUser(mobile, password);
+    const res = await loginUser(mobile, password);
 
-    if (data.token) {
-      await saveToken(data.token);
-      if (data.user) await saveUser(data.user);
+    console.log("LOGIN RESPONSE:", res);
+
+    // 🔥 CORRECT STRUCTURE
+    if (res.success && res.data?.token) {
+      const token = res.data.token;
+      const user = res.data.user;
+
+      await saveToken(token);
+      if (user) await saveUser(user);
 
       // ✅ KYC CHECK
-      if (data.user.kycStatus !== "approved") {
+      if (user?.kycStatus !== "approved") {
         navigation.replace("KYCPending");
         return;
       }
 
-      // ✅ HOME NAVIGATION
-      navigation.replace('Home');
+      Alert.alert("Success", "Login successful!");
+
+      navigation.replace("Home");
 
     } else {
-      Alert.alert('Login Failed', data.message || 'Invalid credentials');
+      Alert.alert("Login Failed", res.message || "Invalid credentials");
     }
 
   } catch (error) {
-    Alert.alert('Error', handleError(error, "Login failed"));
+    Alert.alert("Error", handleError(error, "Login failed"));
   } finally {
     setLoading(false);
   }
 };
+
 
 const handleMobile = (v) => {
   setMobile(v);

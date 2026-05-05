@@ -43,13 +43,20 @@ const Register = ({ navigation }) => {
     setLoading(true);
     try {
       const data = await registerUser(form);
-      if (data.token) {
-        await saveToken(data.token);
-        if (data.user) await saveUser(data.user);
-        navigation.replace('KYC');
-      } else {
-        Alert.alert('Registration Failed', data.message || 'Please try again');
-      }
+      if (data.success && data.data?.token) {
+  const token = data.data.token;
+  const user = data.data.user;
+
+  await saveToken(token);
+  if (user) await saveUser(user);
+
+  Alert.alert("Success", "Registration successful! Please complete KYC.");
+
+  navigation.replace("KYC");
+
+} else {
+  Alert.alert("Registration Failed", data.message || "Please try again");
+}
     // } catch (error) {
     //   const msg = error.response?.data?.message || 'Registration failed. Please try again.';
     //   Alert.alert('Error', msg);

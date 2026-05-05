@@ -18,6 +18,7 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import Loader from '../components/Loader';
 import { handleError } from '../utils/errorHandler';
+import { TextInput } from 'react-native';
 
 const Payment = ({ route, navigation }) => {
   const { merchantId, qrData, type } = route.params || {};
@@ -47,46 +48,7 @@ const Payment = ({ route, navigation }) => {
     loadData();
   }, []);
 
-//   const loadData = async () => {
-//     // 🔥 UPI QR HANDLE
-// if (type === 'upi') {
-//   const upi = parseUPI(qrData);
 
-//   setMerchant({
-//     name: upi.pn ? decodeURIComponent(upi.pn) : "UPI Merchant",
-//     upiId: upi.pa || "Unknown UPI",
-//   });
-
-//   setAmount(upi.am || '');
-
-//   const profileData = await getProfile();
-//   setProfile(profileData.user || profileData);
-
-//   setLoading(false);
-//   return;
-// }
-
-//   const profileData = await getProfile();
-//   setProfile(profileData.user || profileData);
-
-//   setLoading(false);
-//   return;
-// }
-//     try {
-//       const [merchantData, profileData] = await Promise.all([
-//         getMerchantInfo(merchantId),
-//         getProfile(),
-//       ]);
-//       setMerchant(merchantData.merchant || merchantData);
-//       setProfile(profileData.user || profileData);
-//     } catch (error) {
-//       Alert.alert('Error', 'Could not load merchant details.', [
-//         { text: 'Go Back', onPress: () => navigation.goBack() },
-//       ]);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
 
 const loadData = async () => {
   try {
@@ -102,20 +64,13 @@ const loadData = async () => {
       setAmount(upi.am || '');
 
       const profileData = await getProfile();
-      setProfile(profileData.user || profileData);
+      // setProfile(profileData.user || profileData);
 
       setLoading(false);
       return;
     }
 
-    // 🟢 NORMAL STEP PAYS FLOW
-    // const [merchantData, profileData] = await Promise.all([
-    //   getMerchantInfo(merchantId),
-    //   getProfile(),
-    // ]);
-
-    // setMerchant(merchantData.merchant || merchantData);
-    // setProfile(profileData.user || profileData);
+ 
     let merchantData = null;
 let profileData = null;
 
@@ -143,66 +98,91 @@ if (profileData) {
 }
 
   }
-  //  catch (error) {
-  //   Alert.alert('Error', 'Could not load merchant details.', [
-  //     { text: 'Go Back', onPress: () => navigation.goBack() },
-  //   ]);
-  // }
+  
    finally {
     setLoading(false);
   }
 };
 
-  // const handlePay = async () => {
-  //   const num = parseFloat(amount);
-  //   if (!amount || isNaN(num) || num <= 0) {
-  //     setAmountError('Please enter a valid amount');
-  //     return;
-  //   }
-  //   if (num < 1) {
-  //     setAmountError('Minimum amount is ₹1');
-  //     return;
-  //   }
-  //   setAmountError('');
-  //   setPaying(true);
-
-  //   try {
-  //     const data = await initiatePayment({
-  //       merchantId,
-  //       amount: num,
-  //       customerName: profile?.name || 'Customer',
-  //       customerEmail: profile?.email || '',
-  //       customerPhone: profile?.mobile || '',
-  //     });
-
-  //     if (data.payuUrl) {
-  //       await Linking.openURL(data.payuUrl);
-  //       // After returning to app, navigate to history
-  //       navigation.navigate('History');
-  //     } else {
-  //       Alert.alert('Error', 'Could not initiate payment. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     Alert.alert('Payment Error', error.response?.data?.message || 'Payment initiation failed.');
-  //   } finally {
-  //     setPaying(false);
-  //   }
-  // };
+  
 
 
-  const handlePay = async () => {
-  // if (!profile) {
-  //   Alert.alert("Error", "User profile not loaded");
-  //   return;
-  // }
-  setProfile(profileData?.user || profileData || {
-  name: "Guest",
-  email: "",
-  mobile: ""
-});
+
+
+// const handlePay = async () => {
+//   console.log("PAY BUTTON CLICKED");
+//   console.log("PROFILE:", profile);
+
+//   const num = parseFloat(amount);
+
+//   if (!amount || isNaN(num) || num <= 0) {
+//     setAmountError('Please enter a valid amount');
+//     return;
+//   }
+
+//   if (num < 1) {
+//     setAmountError('Minimum amount is ₹1');
+//     return;
+//   }
+
+//   if (num > 500000) {
+//     setAmountError('Maximum amount is ₹5,00,000');
+//     return;
+//   }
+
+//   setAmountError('');
+//   setPaying(true);
+
+//   try {
+//     // ✅ CORRECT PROFILE EXTRACTION
+//     const user = profile?.data?.user || {};
+
+//     console.log("EXTRACTED USER:", user);
+
+//     const data = await initiatePayment({
+//       merchantId,
+//       amount: num,
+//       customerName: user.name || 'Customer',
+//       customerEmail: user.email || '',
+//       customerPhone: user.mobile || '',
+//     });
+
+//     console.log("PAYMENT RESPONSE:", data);
+
+//     // ✅ SAFE URL HANDLE
+//     const payuUrl = data?.payuUrl || data?.data?.payuUrl;
+
+//     if (payuUrl) {
+//        navigation.navigate("PayUWebView", { paymentData: data });
+
+//       // Alert.alert(
+//       //   "Payment Started",
+//       //   "Complete payment and return to app"
+//       // );
+
+//       navigation.navigate('Home');
+
+//     } else {
+//       console.log("FULL RESPONSE:", data);
+//       Alert.alert('Error', 'PayU URL missing');
+//     }
+
+//   } catch (error) {
+//     console.log("PAYMENT ERROR:", error);
+//     Alert.alert('Payment Error', handleError(error, "Payment failed"));
+//   } finally {
+//     setPaying(false);
+//   }
+// };
+
+
+const handlePay = async () => {
+  console.log("PAY BUTTON CLICKED");
+  console.log("PROFILE:", profile);
 
   const num = parseFloat(amount);
 
+  // 🔒 VALIDATION
   if (!amount || isNaN(num) || num <= 0) {
     setAmountError('Please enter a valid amount');
     return;
@@ -222,34 +202,44 @@ if (profileData) {
   setPaying(true);
 
   try {
+    // ✅ CORRECT USER EXTRACTION
+    const user = profile?.data?.user || {};
+
+    console.log("EXTRACTED USER:", user);
+
+    // 🔥 PAYMENT API CALL
     const data = await initiatePayment({
       merchantId,
       amount: num,
-      customerName: profile?.name || 'Customer',
-      customerEmail: profile?.email || '',
-      customerPhone: profile?.mobile || '',
+      customerName: user.name || 'Customer',
+      customerEmail: user.email || '',
+      customerPhone: user.mobile || '',
     });
 
-    if (data.payuUrl) {
-      await Linking.openURL(data.payuUrl);
+    console.log("PAYMENT RESPONSE:", data);
 
-      Alert.alert(
-        "Payment Started",
-        "Complete payment and return to app"
-      );
+    // ✅ SAFE URL EXTRACTION
+    const payuUrl = data?.payuUrl || data?.data?.payuUrl;
 
-      navigation.navigate('Home');
+    if (payuUrl) {
+      // 🔥 OPEN PAYU VIA WEBVIEW
+      navigation.navigate("PayUWebView", { paymentData: data });
 
     } else {
-      Alert.alert('Error', 'Could not initiate payment.');
+      console.log("FULL RESPONSE:", data);
+      Alert.alert('Error', 'PayU URL missing');
     }
 
   } catch (error) {
+    console.log("PAYMENT ERROR:", error);
     Alert.alert('Payment Error', handleError(error, "Payment failed"));
   } finally {
     setPaying(false);
   }
 };
+
+
+
 
   const formatAmount = (text) => {
     const cleaned = text.replace(/[^0-9.]/g, '');
@@ -311,14 +301,16 @@ if (profileData) {
           <Text style={styles.amountLabel}>Enter Amount</Text>
           <View style={[styles.amountInputWrapper, amountError ? styles.amountInputError : null]}>
             <Text style={styles.rupeeSymbol}>₹</Text>
-            <Input
-              value={amount}
-              onChangeText={formatAmount}
-              placeholder="0.00"
-              keyboardType="decimal-pad"
-              style={{ flex: 1, marginBottom: 0 }}
-              inputStyle={styles.amountInput}
-            />
+           <TextInput
+  value={amount}
+  onChangeText={(text) => {
+    const cleaned = text.replace(/[^0-9.]/g, '');
+    setAmount(cleaned);
+  }}
+  placeholder="0.00"
+  keyboardType="decimal-pad"
+  style={styles.amountInput}
+/>
           </View>
           {amountError ? <Text style={styles.errorText}>{amountError}</Text> : null}
 

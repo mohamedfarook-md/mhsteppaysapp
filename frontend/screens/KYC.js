@@ -251,16 +251,29 @@ const KYC = ({ navigation }) => {
   // 📸 Pick from gallery
   const pickImage = async (type) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission needed', 'Allow gallery access.');
-      return;
-    }
+    // if (status !== 'granted') {
+    //   Alert.alert('Permission needed', 'Allow gallery access.');
+    //   return;
+    // }
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
+console.log("Gallery Permission:", permission);
+
+if (!permission.granted) {
+  Alert.alert("Permission Required", "Please allow gallery access in settings");
+  return;
+}
+
+    // const result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: true,
+    //   quality: 0.7,
+    // });
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.7,
-    });
+  mediaTypes: ['images'], // ✅ FIXED
+  allowsEditing: true,
+  quality: 0.7,
+});
 
     if (!result.canceled && result.assets?.[0]) {
       const asset = result.assets[0];

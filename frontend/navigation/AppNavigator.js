@@ -13,6 +13,7 @@ import Payment from '../screens/Payment';
 import History from '../screens/History';
 import Support from '../screens/Support';
 import KYCPending from '../screens/KYCPending';
+import PayUWebView from '../screens/PayUWebView';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +57,7 @@ const AppNavigator = () => {
         <Stack.Screen name="Payment" component={Payment} />
         <Stack.Screen name="History" component={History} />
         <Stack.Screen name="Support" component={Support} />
+        <Stack.Screen name="PayUWebView" component={PayUWebView} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -79,17 +79,43 @@ const History = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState('All');
 
+  // const fetchTransactions = async () => {
+  //   try {
+  //     const data = await getTransactionHistory();
+  //     setTransactions(data.transactions || data || []);
+  //   } catch (error) {
+  //     Alert.alert('Error', 'Failed to load transactions.');
+  //   } finally {
+  //     setLoading(false);
+  //     setRefreshing(false);
+  //   }
+  // };
+
   const fetchTransactions = async () => {
-    try {
-      const data = await getTransactionHistory();
-      setTransactions(data.transactions || data || []);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to load transactions.');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+  try {
+    const data = await getTransactionHistory();
+
+    console.log("TRANSACTION API RESPONSE:", data); // 🔥 debug
+
+    if (Array.isArray(data)) {
+      setTransactions(data);
+    } else if (Array.isArray(data?.transactions)) {
+      setTransactions(data.transactions);
+    } else if (Array.isArray(data?.data)) {
+      setTransactions(data.data);
+    } else {
+      console.log("INVALID DATA FORMAT:", data);
+      setTransactions([]);
     }
-  };
+
+  } catch (error) {
+    Alert.alert('Error', 'Failed to load transactions.');
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+};
+
 
   useFocusEffect(
     useCallback(() => {
@@ -97,9 +123,17 @@ const History = ({ navigation }) => {
     }, [])
   );
 
-  const filtered = filter === 'All'
-    ? transactions
-    : transactions.filter((t) => t.status?.toLowerCase() === filter.toLowerCase());
+  // const filtered = filter === 'All'
+  //   ? transactions
+  //   : transactions.filter((t) => t.status?.toLowerCase() === filter.toLowerCase());
+
+  const safeTransactions = Array.isArray(transactions) ? transactions : [];
+
+const filtered = filter === 'All'
+  ? safeTransactions
+  : safeTransactions.filter(
+      (t) => t.status?.toLowerCase() === filter.toLowerCase()
+    );
 
   const totalSuccess = transactions
     .filter((t) => t.status?.toLowerCase() === 'success')
