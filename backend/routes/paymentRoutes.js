@@ -1,13 +1,17 @@
 // routes/paymentRoutes.js
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
 const {
   initiatePayment,
   paymentSuccess,
   paymentFailure,
   getMerchantInfo,
+  initiateUPIPayment,
+  markUPISuccess
 } = require('../controllers/paymentController');
 const { protect } = require('../middleware/auth');
+
 
 // POST /api/payment/initiate (Protected)
 router.post('/initiate', protect, initiatePayment);
