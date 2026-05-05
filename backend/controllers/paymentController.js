@@ -29,7 +29,7 @@ const initiatePayment = async (req, res) => {
     // ── PayU credentials ────────────────────────────────────────────────────
     const PAYU_KEY = process.env.PAYU_KEY;
     const PAYU_BASE_URL = process.env.PAYU_BASE_URL || 'https://secure.payu.in/_payment';
-    const APP_URL = process.env.APP_URL || 'https://apisteppays.in';
+    const APP_URL = process.env.APP_URL || 'https://mhsteppaysapp.in';
 
     if (!PAYU_KEY || !process.env.PAYU_SALT) {
       console.error('❌ PayU credentials not configured');

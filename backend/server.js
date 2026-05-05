@@ -149,7 +149,7 @@ const server = app.listen(PORT, () => {
 ╠══════════════════════════════════════════╣
 ║  Port    : ${PORT}                            ║
 ║  Mode    : ${process.env.NODE_ENV || 'development'}                   ║
-║  Base URL: https://apisteppays.in/api    ║
+║  Base URL: https://mhsteppaysapp.in/api    ║
 ╚══════════════════════════════════════════╝
   `);
 });

@@ -17,7 +17,12 @@ const getUserTransactions = async (req, res) => {
     // Optional query params for filtering
     const { status, limit = 50, page = 1 } = req.query;
 
-    const query = { userId };
+    const query = {
+  $or: [
+    { userId },
+    { customerPhone: req.user.mobile }
+  ]
+};
     if (status && ['pending', 'success', 'failed', 'processing'].includes(status)) {
       query.status = status;
     }
