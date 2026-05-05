@@ -14,8 +14,9 @@ const sendResponse = (res, statusCode, success, message, data = {}) => {
  */
 const initiatePayment = async (req, res) => {
   try {
-    const { amount, merchantId, customerName, customerEmail, customerPhone } = req.body;
+    // const { amount, merchantId, customerName, customerEmail, customerPhone } = req.body;
     // const { amount, merchantId, merchantName, customerName, customerEmail, customerPhone } = req.body;
+    const { amount, merchantId, merchantName, customerName, customerEmail, customerPhone } = req.body;
     const user = req.user;
 
     // ── Validate amount ─────────────────────────────────────────────────────
@@ -93,8 +94,7 @@ if (merchantId) {
     await Transaction.create({
   userId: user._id,
   txnId: txnid,
-  merchantId: merchantId || '',
-  merchant: merchantName, // 🔥 FIXED
+  merchant: merchantName || merchantId || 'Payment',
   amount: numAmount,
   status: 'pending',
   type: 'payu',
