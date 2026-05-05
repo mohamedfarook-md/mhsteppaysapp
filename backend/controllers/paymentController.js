@@ -158,9 +158,17 @@ const paymentSuccess = async (req, res) => {
     // ── Redirect to app or return JSON (depends on integration type) ─────────
     // For mobile apps using Linking.openURL, return JSON
     // For web redirect, redirect to success page
-    const successUrl = `${process.env.APP_URL}/payment-status?txnid=${txnid}&status=success`;
-    return res.redirect(successUrl);
-
+    // const successUrl = `${process.env.APP_URL}/payment-status?txnid=${txnid}&status=success`;
+    // return res.redirect(successUrl);
+return res.send(`
+  <html>
+    <body>
+      <script>
+        window.location.href = "${process.env.APP_URL}/api/payment/success?txnid=${txnid}";
+      </script>
+    </body>
+  </html>
+`);
   } catch (error) {
     console.error('Payment success callback error:', error);
     return res.status(500).send('Error processing payment');
@@ -187,9 +195,17 @@ const paymentFailure = async (req, res) => {
       }
     );
 
-    const failUrl = `${process.env.APP_URL}/payment-status?txnid=${txnid}&status=failed`;
-    return res.redirect(failUrl);
-
+    // const failUrl = `${process.env.APP_URL}/payment-status?txnid=${txnid}&status=failed`;
+    // return res.redirect(failUrl);
+return res.send(`
+  <html>
+    <body>
+      <script>
+        window.location.href = "${process.env.APP_URL}/api/payment/failure?txnid=${txnid}";
+      </script>
+    </body>
+  </html>
+`);
   } catch (error) {
     console.error('Payment failure callback error:', error);
     return res.status(500).send('Error processing failure');
