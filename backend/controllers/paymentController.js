@@ -60,14 +60,14 @@ const initiatePayment = async (req, res) => {
 
     let merchantName = merchantId || 'Payment';
 
-// if (merchantId) {
-//   const merchantData = await Merchant.findOne({ merchantId });
-//   console.log("MERCHANT FETCH:", merchantData);
+if (merchantId) {
+  const merchantData = await Merchant.findOne({ merchantId });
+  console.log("MERCHANT FETCH:", merchantData);
 
-//   if (merchantData && merchantData.name) {
-//     merchantName = merchantData.name;
-//   }
-// }
+  if (merchantData && merchantData.name) {
+    merchantName = merchantData.name;
+  }
+}
 // let merchantName = 'Payment';
 
 // if (merchantId && typeof merchantId === "string") {
