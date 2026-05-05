@@ -56,21 +56,42 @@ const initiatePayment = async (req, res) => {
       firstname,
       email,
     });
+let merchantName = merchantId || 'Payment';
+    if (merchantId) {
+  const merchantData = await Merchant.findOne({ merchantId });
+  if (merchantData) {
+    merchantName = merchantData.name;
+  }
+}
 
     // ── Save pending transaction ────────────────────────────────────────────
+    // await Transaction.create({
+    //   userId: user._id,
+    //   txnId: txnid,
+    //   merchantId: merchantId || '',
+    //   merchant: merchantId || '',
+    //   amount: numAmount,
+    //   status: 'pending',
+    //   type: 'payu',
+    //   customerName: firstname,
+    //   customerEmail: email,
+    //   customerPhone: phone,
+    //   hash, // Stored for audit (excluded from default queries)
+    // });
+
     await Transaction.create({
-      userId: user._id,
-      txnId: txnid,
-      merchantId: merchantId || '',
-      merchant: merchantId || '',
-      amount: numAmount,
-      status: 'pending',
-      type: 'payu',
-      customerName: firstname,
-      customerEmail: email,
-      customerPhone: phone,
-      hash, // Stored for audit (excluded from default queries)
-    });
+  userId: user._id,
+  txnId: txnid,
+  merchantId: merchantId || '',
+  merchant: merchantName, // 🔥 FIXED
+  amount: numAmount,
+  status: 'pending',
+  type: 'payu',
+  customerName: firstname,
+  customerEmail: email,
+  customerPhone: phone,
+  hash,
+});
 
     console.log(`✅ Payment initiated: ${txnid} | ₹${formattedAmount} | User: ${user.mobile}`);
 
