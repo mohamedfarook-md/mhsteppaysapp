@@ -14,8 +14,8 @@ const sendResponse = (res, statusCode, success, message, data = {}) => {
  */
 const initiatePayment = async (req, res) => {
   try {
-    // const { amount, merchantId, customerName, customerEmail, customerPhone } = req.body;
-    const { amount, merchantId, merchantName, customerName, customerEmail, customerPhone } = req.body;
+    const { amount, merchantId, customerName, customerEmail, customerPhone } = req.body;
+    // const { amount, merchantId, merchantName, customerName, customerEmail, customerPhone } = req.body;
     const user = req.user;
 
     // ── Validate amount ─────────────────────────────────────────────────────
