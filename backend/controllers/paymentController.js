@@ -323,14 +323,10 @@ exports.markUPISuccess = async (req, res) => {
   }
 };
 
-// controllers/paymentController.js
 
 
-const { generatePayuHash, verifyPayuResponseHash, generateTxnId } = require('../utils/payuHash');
 
-const sendResponse = (res, statusCode, success, message, data = {}) => {
-  return res.status(statusCode).json({ success, message, data });
-};
+
 
 // ─── POST /api/payment/initiate ───────────────────────────────────────────────
 /**
