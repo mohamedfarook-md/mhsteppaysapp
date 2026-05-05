@@ -325,7 +325,7 @@ exports.markUPISuccess = async (req, res) => {
 
 // controllers/paymentController.js
 
-const Merchant = require('../models/Merchant');
+
 const { generatePayuHash, verifyPayuResponseHash, generateTxnId } = require('../utils/payuHash');
 
 const sendResponse = (res, statusCode, success, message, data = {}) => {
