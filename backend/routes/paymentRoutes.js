@@ -21,4 +21,7 @@ router.post('/failure', paymentFailure);
 // GET /api/public/:merchantId — Public merchant info lookup (for QR scan)
 // Note: Registered as /api/public/:merchantId in server.js
 
+router.post('/upi-initiate', auth, initiateUPIPayment);
+router.post('/upi-success', auth, markUPISuccess);
+
 module.exports = router;

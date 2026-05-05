@@ -28,6 +28,8 @@ const initiatePayment = async (req, res) => {
       return sendResponse(res, 400, false, 'Maximum payment amount is ₹5,00,000.');
     }
 
+
+    
     // ── PayU credentials ────────────────────────────────────────────────────
     const PAYU_KEY = process.env.PAYU_KEY;
     const PAYU_BASE_URL = process.env.PAYU_BASE_URL || 'https://secure.payu.in/_payment';
@@ -271,6 +273,53 @@ const getMerchantInfo = async (req, res) => {
   } catch (error) {
     console.error('Get merchant error:', error);
     return sendResponse(res, 500, false, 'Failed to fetch merchant info.');
+  }
+};
+
+exports.initiateUPIPayment = async (req, res) => {
+  try {
+    const user = req.user;
+    const { merchantId, amount, merchantName } = req.body;
+
+    const txnId = "UPI" + Date.now();
+
+    await Transaction.create({
+      userId: user._id,
+      txnId,
+      merchantId,
+      merchant: merchantName || merchantId,
+      amount,
+      status: "pending",
+      type: "upi",
+      customerName: user.name,
+      customerEmail: user.email,
+      customerPhone: user.mobile
+    });
+
+    res.json({
+      success: true,
+      data: { txnId }
+    });
+
+  } catch (err) {
+    console.log("UPI INIT ERROR:", err);
+    res.status(500).json({ success: false });
+  }
+};
+
+exports.markUPISuccess = async (req, res) => {
+  try {
+    const { txnId } = req.body;
+
+    await Transaction.findOneAndUpdate(
+      { txnId },
+      { status: "success" }
+    );
+
+    res.json({ success: true });
+
+  } catch (err) {
+    res.status(500).json({ success: false });
   }
 };
 
