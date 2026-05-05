@@ -94,7 +94,8 @@ if (merchantId) {
     await Transaction.create({
   userId: user._id,
   txnId: txnid,
-  merchant: merchantName || merchantId || 'Payment',
+  merchant: merchantId || 'Payment',
+  merchantName: merchantName,
   amount: numAmount,
   status: 'pending',
   type: 'payu',
