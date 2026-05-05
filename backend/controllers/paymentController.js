@@ -396,25 +396,7 @@ if (merchantId) {
     merchantName = merchantData.name;
   }
 }
-// let merchantName = 'Payment';
 
-// if (merchantId && typeof merchantId === "string") {
-//   try {
-//     const merchantData = await Merchant.findOne({ merchantId });
-
-//     console.log("MERCHANT FETCH:", merchantData);
-
-//     if (merchantData && merchantData.name) {
-//       merchantName = merchantData.name;
-//     } else {
-//       merchantName = merchantId; // fallback
-//     }
-
-//   } catch (error) {
-//     console.log("MERCHANT ERROR:", error);
-//     merchantName = merchantId || 'Payment';
-//   }
-// }
 
     // ── Save pending transaction ────────────────────────────────────────────
 
@@ -601,7 +583,7 @@ const getMerchantInfo = async (req, res) => {
   }
 };
 
-exports.initiateUPIPayment = async (req, res) => {
+const initiateUPIPayment = async (req, res) => {
   try {
     const user = req.user;
     const { merchantId, amount, merchantName } = req.body;
@@ -621,18 +603,18 @@ exports.initiateUPIPayment = async (req, res) => {
       customerPhone: user.mobile
     });
 
-    res.json({
+    return res.json({
       success: true,
       data: { txnId }
     });
 
   } catch (err) {
     console.log("UPI INIT ERROR:", err);
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
 };
 
-exports.markUPISuccess = async (req, res) => {
+const markUPISuccess = async (req, res) => {
   try {
     const { txnId } = req.body;
 
@@ -641,12 +623,13 @@ exports.markUPISuccess = async (req, res) => {
       { status: "success" }
     );
 
-    res.json({ success: true });
+    return res.json({ success: true });
 
   } catch (err) {
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
 };
+
 module.exports = {
   initiatePayment,
   paymentSuccess,
