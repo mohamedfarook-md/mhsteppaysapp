@@ -58,7 +58,7 @@ const initiatePayment = async (req, res) => {
       email,
     });
 
-//     let merchantName = merchantId || 'Payment';
+    let merchantName = merchantId || 'Payment';
 
 // if (merchantId) {
 //   const merchantData = await Merchant.findOne({ merchantId });
@@ -68,25 +68,25 @@ const initiatePayment = async (req, res) => {
 //     merchantName = merchantData.name;
 //   }
 // }
-let merchantName = 'Payment';
+// let merchantName = 'Payment';
 
-if (merchantId && typeof merchantId === "string") {
-  try {
-    const merchantData = await Merchant.findOne({ merchantId });
+// if (merchantId && typeof merchantId === "string") {
+//   try {
+//     const merchantData = await Merchant.findOne({ merchantId });
 
-    console.log("MERCHANT FETCH:", merchantData);
+//     console.log("MERCHANT FETCH:", merchantData);
 
-    if (merchantData && merchantData.name) {
-      merchantName = merchantData.name;
-    } else {
-      merchantName = merchantId; // fallback
-    }
+//     if (merchantData && merchantData.name) {
+//       merchantName = merchantData.name;
+//     } else {
+//       merchantName = merchantId; // fallback
+//     }
 
-  } catch (error) {
-    console.log("MERCHANT ERROR:", error);
-    merchantName = merchantId || 'Payment';
-  }
-}
+//   } catch (error) {
+//     console.log("MERCHANT ERROR:", error);
+//     merchantName = merchantId || 'Payment';
+//   }
+// }
 
     // ── Save pending transaction ────────────────────────────────────────────
 
