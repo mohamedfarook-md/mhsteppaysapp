@@ -97,16 +97,22 @@ const History = ({ navigation }) => {
 
     console.log("TRANSACTION API RESPONSE:", data); // 🔥 debug
 
-    if (Array.isArray(data)) {
-      setTransactions(data);
-    } else if (Array.isArray(data?.transactions)) {
-      setTransactions(data.transactions);
-    } else if (Array.isArray(data?.data)) {
-      setTransactions(data.data);
-    } else {
-      console.log("INVALID DATA FORMAT:", data);
-      setTransactions([]);
-    }
+    // if (Array.isArray(data)) {
+    //   setTransactions(data);
+    // } else if (Array.isArray(data?.transactions)) {
+    //   setTransactions(data.transactions);
+    // } else if (Array.isArray(data?.data)) {
+    //   setTransactions(data.data);
+    // } else {
+    //   console.log("INVALID DATA FORMAT:", data);
+    //   setTransactions([]);
+    // }
+    if (Array.isArray(data?.data?.transactions)) {
+  setTransactions(data.data.transactions);
+} else {
+  console.log("INVALID DATA FORMAT:", data);
+  setTransactions([]);
+}
 
   } catch (error) {
     Alert.alert('Error', 'Failed to load transactions.');

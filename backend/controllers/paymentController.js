@@ -8,6 +8,7 @@ const sendResponse = (res, statusCode, success, message, data = {}) => {
 };
 
 
+
 const initiatePayment = async (req, res) => {
   try {
     const { amount, merchantId, customerName, customerEmail, customerPhone } = req.body;
@@ -43,10 +44,25 @@ const initiatePayment = async (req, res) => {
     const firstname = customerName || user.name;
     const email = customerEmail || user.email || `${user.mobile}@steppays.in`;
     const phone = customerPhone || user.mobile;
-    const productinfo = merchantId
-      ? `Payment to ${merchantId}`
-      : 'StepPays Payment';
+    // const productinfo = merchantId
+    //   ? `Payment to ${merchantId}`
+    //   : 'StepPays Payment';
 
+    let merchantName = merchantId || 'Payment';
+
+if (merchantId) {
+
+  const merchantData = await Merchant.findOne({ merchantId });
+
+  console.log("MERCHANT FETCH:", merchantData);
+
+  if (merchantData && merchantData.name) {
+
+    merchantName = merchantData.name;
+  }
+}
+
+const productinfo = `Payment to ${merchantName}`;
     // ── Generate hash ───────────────────────────────────────────────────────
     const hash = generatePayuHash({
       key: PAYU_KEY,
@@ -57,16 +73,16 @@ const initiatePayment = async (req, res) => {
       email,
     });
 
-    let merchantName = merchantId || 'Payment';
+//     let merchantName = merchantId || 'Payment';
 
-if (merchantId) {
-  const merchantData = await Merchant.findOne({ merchantId });
-  console.log("MERCHANT FETCH:", merchantData);
+// if (merchantId) {
+//   const merchantData = await Merchant.findOne({ merchantId });
+//   console.log("MERCHANT FETCH:", merchantData);
 
-  if (merchantData && merchantData.name) {
-    merchantName = merchantData.name;
-  }
-}
+//   if (merchantData && merchantData.name) {
+//     merchantName = merchantData.name;
+//   }
+// }
 
 
     // ── Save pending transaction ────────────────────────────────────────────

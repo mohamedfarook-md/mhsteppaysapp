@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Linking,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -19,6 +18,8 @@ import Input from '../components/Input';
 import Loader from '../components/Loader';
 import { handleError } from '../utils/errorHandler';
 import { TextInput } from 'react-native';
+import { initiateUPI, markUPISuccess } from '../services/payment';
+import * as Linking from 'expo-linking';
 
 const Payment = ({ route, navigation }) => {
   const { merchantId, qrData, type } = route.params || {};
@@ -104,137 +105,94 @@ if (profileData) {
   }
 };
 
-  
 
 
 
-
-// const handlePay = async () => {
-//   console.log("PAY BUTTON CLICKED");
-//   console.log("PROFILE:", profile);
-
-//   const num = parseFloat(amount);
-
-//   if (!amount || isNaN(num) || num <= 0) {
-//     setAmountError('Please enter a valid amount');
-//     return;
-//   }
-
-//   if (num < 1) {
-//     setAmountError('Minimum amount is ₹1');
-//     return;
-//   }
-
-//   if (num > 500000) {
-//     setAmountError('Maximum amount is ₹5,00,000');
-//     return;
-//   }
-
-//   setAmountError('');
-//   setPaying(true);
-
-//   try {
-//     // ✅ CORRECT PROFILE EXTRACTION
-//     const user = profile?.data?.user || {};
-
-//     console.log("EXTRACTED USER:", user);
-
-//     const data = await initiatePayment({
-//       merchantId,
-//       amount: num,
-//       customerName: user.name || 'Customer',
-//       customerEmail: user.email || '',
-//       customerPhone: user.mobile || '',
-//     });
-
-//     console.log("PAYMENT RESPONSE:", data);
-
-//     // ✅ SAFE URL HANDLE
-//     const payuUrl = data?.payuUrl || data?.data?.payuUrl;
-
-//     if (payuUrl) {
-//        navigation.navigate("PayUWebView", { paymentData: data });
-
-//       // Alert.alert(
-//       //   "Payment Started",
-//       //   "Complete payment and return to app"
-//       // );
-
-//       navigation.navigate('Home');
-
-//     } else {
-//       console.log("FULL RESPONSE:", data);
-//       Alert.alert('Error', 'PayU URL missing');
-//     }
-
-//   } catch (error) {
-//     console.log("PAYMENT ERROR:", error);
-//     Alert.alert('Payment Error', handleError(error, "Payment failed"));
-//   } finally {
-//     setPaying(false);
-//   }
-// };
 
 
 const handlePay = async () => {
-  console.log("PAY BUTTON CLICKED");
-  console.log("PROFILE:", profile);
-
   const num = parseFloat(amount);
 
-  // 🔒 VALIDATION
-  if (!amount || isNaN(num) || num <= 0) {
-    setAmountError('Please enter a valid amount');
+  if (!num || num <= 0) {
+    Alert.alert("Enter valid amount");
     return;
   }
 
-  if (num < 1) {
-    setAmountError('Minimum amount is ₹1');
-    return;
-  }
+  // // 🔥 UPI FLOW
+  // if (merchant?.upiId) {
+  //   try {
+  //     const res = await initiateUPI({
+  //       merchantId,
+  //       merchantName: merchant.name,
+  //       amount: num
+  //     });
 
-  if (num > 500000) {
-    setAmountError('Maximum amount is ₹5,00,000');
-    return;
-  }
+  //     const txnId = res.data.data.txnId;
 
-  setAmountError('');
-  setPaying(true);
+  //     const upiUrl = `upi://pay?pa=${merchant.upiId}&pn=${merchant.name}&am=${num}&cu=INR`;
 
+  //     await Linking.openURL(upiUrl);
+
+  //     // assume success
+  //     await markUPISuccess({ txnId });
+
+  //     navigation.navigate("Home");
+
+  //   } catch (err) {
+  //     console.log(err);
+  //     Alert.alert("UPI Payment Failed");
+  //   }
+
+  // } 
+  // 🔥 UPI FLOW
+if (merchant?.upiId) {
   try {
-    // ✅ CORRECT USER EXTRACTION
-    const user = profile?.data?.user || {};
 
-    console.log("EXTRACTED USER:", user);
-
-    // 🔥 PAYMENT API CALL
-    const data = await initiatePayment({
+    const res = await initiateUPI({
       merchantId,
-      amount: num,
-      customerName: user.name || 'Customer',
-      customerEmail: user.email || '',
-      customerPhone: user.mobile || '',
+      merchantName: merchant.name,
+      amount: num
     });
 
-    console.log("PAYMENT RESPONSE:", data);
+    const txnId = res.data.data.txnId;
 
-    // ✅ SAFE URL EXTRACTION
-    const payuUrl = data?.payuUrl || data?.data?.payuUrl;
+    // ✅ UPDATED UPI URL
+    const upiUrl =
+      `upi://pay?pa=${merchant.upiId}` +
+      `&pn=${encodeURIComponent(merchant.name)}` +
+      `&tr=${txnId}` +
+      `&tn=${encodeURIComponent("Payment")}` +
+      `&am=${num}` +
+      `&cu=INR`;
 
-    if (payuUrl) {
-      // 🔥 OPEN PAYU VIA WEBVIEW
-      navigation.navigate("PayUWebView", { paymentData: data });
+    console.log("UPI URL:", upiUrl);
 
-    } else {
-      console.log("FULL RESPONSE:", data);
-      Alert.alert('Error', 'PayU URL missing');
-    }
+    await Linking.openURL(upiUrl);
 
-  } catch (error) {
-    console.log("PAYMENT ERROR:", error);
-    Alert.alert('Payment Error', handleError(error, "Payment failed"));
-  } finally {
-    setPaying(false);
+    // 🔥 TEMP SUCCESS ASSUME
+    await markUPISuccess({ txnId });
+
+    navigation.navigate("Home");
+
+  } catch (err) {
+
+    console.log("UPI ERROR:", err);
+
+    Alert.alert("UPI Payment Failed");
+  }
+}
+  else {
+    // 🔥 PAYU FLOW
+    const data = await initiatePayment({
+      merchantId,
+      merchantName: merchant.name,
+      amount: num,
+      customerName: profile?.data?.user?.name,
+      customerEmail: profile?.data?.user?.email,
+      customerPhone: profile?.data?.user?.mobile,
+    });
+
+    navigation.navigate("PayUWebView", { paymentData: data });
   }
 };
 
