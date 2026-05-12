@@ -55,24 +55,34 @@ const register = async (req, res) => {
     }
 
     // ── Create user (password hashed by pre-save hook in model) ────────────
-    const user = await User.create({
-      name: name.trim(),
-      mobile: mobile.trim(),
-      email: email ? email.trim().toLowerCase() : '',
-      password,
-    });
+    // const user = await User.create({
+    //   name: name.trim(),
+    //   mobile: mobile.trim(),
+    //   email: email ? email.trim().toLowerCase() : '',
+    //   password,
+    // });
 
     // ── Generate JWT ────────────────────────────────────────────────────────
-    const token = generateToken(user._id);
+    // const token = generateToken(user._id);
 
-    console.log(`✅ New user registered: ${mobile}`);
+    // console.log(`✅ New user registered: ${mobile}`);
 
-    return sendResponse(res, 201, true, 'Registration successful! Please complete KYC.', {
-      token,
-      user: user.toPublicJSON(),
-    });
+    // return sendResponse(res, 201, true, 'Registration successful! Please complete KYC.', {
+    //   token,
+    //   user: user.toPublicJSON(),
+    // });
+    console.log(`✅ Registration step completed: ${mobile}`);
 
-  } catch (error) {
+return sendResponse(
+  res,
+  200,
+  true,
+  'Proceed to KYC verification.',
+  {}
+);
+
+  } 
+  catch (error) {
     console.error('Register error:', error);
 
     // Handle MongoDB duplicate key error

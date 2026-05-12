@@ -38,6 +38,8 @@ const userSchema = new mongoose.Schema(
     kyc: {
       aadhaar: { type: String, default: '' },  // File path
       pan: { type: String, default: '' },        // File path
+      aadhaarNumber: { type: String, default: '' },
+      panNumber: { type: String, default: '' },
       // Matches frontend kycStatus field exactly
       status: {
         type: String,

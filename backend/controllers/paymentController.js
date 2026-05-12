@@ -73,17 +73,6 @@ const productinfo = `Payment to ${merchantName}`;
       email,
     });
 
-//     let merchantName = merchantId || 'Payment';
-
-// if (merchantId) {
-//   const merchantData = await Merchant.findOne({ merchantId });
-//   console.log("MERCHANT FETCH:", merchantData);
-
-//   if (merchantData && merchantData.name) {
-//     merchantName = merchantData.name;
-//   }
-// }
-
 
     // ── Save pending transaction ────────────────────────────────────────────
 
@@ -185,10 +174,7 @@ const paymentSuccess = async (req, res) => {
     console.log(`✅ Payment ${status}: ${txnid} | ₹${amount}`);
 
     // ── Redirect to app or return JSON (depends on integration type) ─────────
-    // For mobile apps using Linking.openURL, return JSON
-    // For web redirect, redirect to success page
-    // const successUrl = `${process.env.APP_URL}/payment-status?txnid=${txnid}&status=success`;
-    // return res.redirect(successUrl);
+    
 return res.send(`
   <html>
     <body>
